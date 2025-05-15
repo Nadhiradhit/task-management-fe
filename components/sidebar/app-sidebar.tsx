@@ -13,9 +13,10 @@ import {
 	SidebarMenuSubItem,
 } from "../ui/sidebar";
 import Link from "next/link";
-import { Command, LogOut } from "lucide-react";
-import { logout } from "@/lib/auth";
+import { Command, LogOut, Users } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
+
 const data = {
 	navMain: [
 		{
@@ -24,7 +25,7 @@ const data = {
 			items: [
 				{
 					title: "Task Board",
-					url: "/task-board",
+					url: "/dashboard/task-board",
 				},
 			],
 		},
@@ -35,6 +36,7 @@ export default function AppSidebar({
 	...props
 }: React.ComponentProps<typeof Sidebar>) {
 	const router = useRouter();
+	const { user, logout } = useAuth();
 
 	const handleLogout = () => {
 		logout();
@@ -82,6 +84,16 @@ export default function AppSidebar({
 								) : null}
 							</SidebarMenuItem>
 						))}
+						{user?.role === "ADMIN" && (
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild>
+									<Link href="/dashboard/users" className="font-medium">
+										<Users className="size-4 mr-2" />
+										Users
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						)}
 					</SidebarMenu>
 				</SidebarGroup>
 				<SidebarGroup className="mt-auto">
