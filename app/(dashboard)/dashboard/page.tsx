@@ -1,10 +1,9 @@
-import { Sidebar } from "@/components/ui/sidebar";
-import React from "react";
+import DashboardPage from "../_sections/dashboard-page";
 
 export default function page() {
 	return (
 		<div>
-			<p>Dashboard User</p>
+			<DashboardPage />
 		</div>
 	);
 }

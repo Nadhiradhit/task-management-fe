@@ -28,4 +28,7 @@ export const register = async (userData: any) => {
 export const logout = () => {
 	Cookies.remove("token");
 	Cookies.remove("user");
+	Cookies.remove("email");
+	Cookies.remove("name");
+	Cookies.remove("role");
 };

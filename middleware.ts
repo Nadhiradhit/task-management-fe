@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const publicRoutes = ["/login", "/register", "/forgot-password"];
+
 export function middleware(request: NextRequest) {
 	const token = request.cookies.get("token");
-	const isAuthPage = request.nextUrl.pathname.startsWith("/login");
+	const { pathname } = request.nextUrl;
 
-	if (!token && !isAuthPage) {
-		return NextResponse.redirect(new URL("/login", request.url));
+	const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
+
+	if (!token && !isPublic) {
+		const loginUrl = new URL("/login", request.url);
+
+		loginUrl.searchParams.set("redirect", pathname);
+		return NextResponse.redirect(loginUrl);
 	}
 
-	if (token && isAuthPage) {
+	if (token && isPublic) {
 		return NextResponse.redirect(new URL("/dashboard", request.url));
 	}
 
@@ -17,5 +24,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/dashboard/:path*", "/login"],
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico|public).*)"],
 };

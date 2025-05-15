@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -15,15 +15,18 @@ export default function LoginForm() {
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const redirect = searchParams.get("redirect") || "/dashboard";
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
 		setError("");
 		setLoading(true);
 
 		try {
 			const response = await login(email, password);
 			if (response.status === "Success") {
-				router.push("/dashboard");
+				router.push(redirect);
 			} else {
 				setError(response.message || "Login failed");
 			}
